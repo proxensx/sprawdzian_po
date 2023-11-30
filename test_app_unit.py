@@ -12,4 +12,3 @@ def test_get_all_users(client: FlaskClient) -> None:
     actual = client.get('/users')
     assert actual.status_code == 200
 
-
