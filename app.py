@@ -54,7 +54,7 @@ def update_user(user_id):
         if 'lastname' in data:
             user['lastname'] = data['lastname']
         return '', 204
-    return jsonify({'error': 'User not found'}), 404
+    return jsonify({'error': 'User not found'}), 400
 
 
 @app.put('/users/<int:user_id>')
@@ -82,7 +82,7 @@ def delete_user(user_id):
         users.remove(user)
         return jsonify(), 204
     else:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': 'User not found'}), 400
 
 
 
