@@ -15,9 +15,16 @@ def get_all_users():
     return jsonify(users), 200
 
 
+def get_user_by_id(user_id):
+    for user in users:
+        if user['id'] == user_id:
+            return user
+    return None
+
+
 @app.get('/users/<int:user_id>')
 def get_user(user_id):
-    user = next((user for user in users if user['id'] == user_id), None)
+    user = get_user_by_id(user_id)
     if user:
         return jsonify(user), 200
     return jsonify({'error': 'User not found'}), 404
@@ -39,7 +46,7 @@ def create_user():
 
 @app.patch('/users/<id>')
 def update_user(user_id):
-    user = next((user for user in users if user['id'] == user_id), None)
+    user = get_user_by_id(user_id)
     if user:
         data = request.get_json()
         if 'name' in data:
@@ -52,7 +59,7 @@ def update_user(user_id):
 
 @app.put('/users/<int:user_id>')
 def replace_user(user_id):
-    user = next((user for user in users if user['id'] == user_id), None)
+    user = get_user_by_id(user_id)
     data = request.get_json()
     if user:
         user['name'] = data['name']
@@ -70,9 +77,13 @@ def replace_user(user_id):
 
 @app.delete('/users/<int:user_id>')
 def delete_user(user_id):
-    global users
-    users = [user for user in users if user['id'] != user_id]
-    return '', 204
+    user = get_user_by_id(user_id)
+    if user:
+        users.remove(user)
+        return jsonify(), 204
+    else:
+        return jsonify({'error': 'User not found'}), 404
+
 
 
 @app.route('/')
