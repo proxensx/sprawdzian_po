@@ -36,23 +36,49 @@ def create_user():
         return '', 201
     return jsonify({'error': 'Invalid request body'}), 400
 
+
 @app.patch('/users/<id>')
 def update_user(user_id):
-    pass
+    user = next((user for user in users if user['id'] == user_id), None)
+    if user:
+        data = request.get_json()
+        if 'name' in data:
+            user['name'] = data['name']
+        if 'lastname' in data:
+            user['lastname'] = data['lastname']
+        return '', 204
+    return jsonify({'error': 'User not found'}), 404
 
 
 @app.put('/users/<int:user_id>')
 def replace_user(user_id):
-    pass
+    user = next((user for user in users if user['id'] == user_id), None)
+    data = request.get_json()
+    if user:
+        user['name'] = data['name']
+        user['lastname'] = data['lastname']
+        return '', 204
+    else:
+        new_user = {
+            'id': user_id,
+            'name': data['name'],
+            'lastname': data['lastname']
+        }
+        users.append(new_user)
+        return '', 201
 
 
 @app.delete('/users/<int:user_id>')
 def delete_user(user_id):
-    pass
+    global users
+    users = [user for user in users if user['id'] != user_id]
+    return '', 204
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
     
+    
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
