@@ -31,5 +31,5 @@ def test_replace_user(client: FlaskClient) -> None:
 
 
 def test_delete_user(client: FlaskClient) -> None:
-    pass
-    
+    actual = client.delete(f"/users/3")
+    assert actual.status_code == 400
