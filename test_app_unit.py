@@ -19,7 +19,9 @@ def test_get_user(client: FlaskClient) -> None:
 
 
 def test_create_user(client: FlaskClient) -> None:
-    pass
+    new_data = {"name": "Wojciech", "lastname": "Oczkowski"}
+    actual = client.post('/users', json=new_data)
+    assert actual.status_code == 201
     
 
 def test_update_user(client: FlaskClient) -> None:
@@ -31,5 +33,5 @@ def test_replace_user(client: FlaskClient) -> None:
 
 
 def test_delete_user(client: FlaskClient) -> None:
-    actual = client.delete(f"/users/3")
+    actual = client.delete(f"/users/4")
     assert actual.status_code == 400
